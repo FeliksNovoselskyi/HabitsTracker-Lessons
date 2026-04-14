@@ -1,39 +1,30 @@
-from fastapi import APIRouter, HTTPException, Body, Query
-from .repository import add_user, get_user
+from fastapi import APIRouter, Body, Query
+import modules.service as service
 from .schemas import UserData
-
 
 
 api_router = APIRouter()
 
 
 @api_router.post("/add_user")
-def user_info(data: dict = Body(
+def add_user(data: dict = Body(
             example = {
                 "first_name": "Jason",
                 "last_name": "Statham",
                 "email": "js1404@gmail.com"
             }
         )
-    ):
+    ) -> UserData:
     
-    try:    
-        user_data = UserData(
-            first_name = data["first_name"],
-            last_name = data["last_name"],
-            email = data["email"]
-        )
-        
-        add_user(data = data)
-        return user_data
-    except:
-        raise HTTPException(status_code = 400, detail = "Invalid fields")
+    return service.add_user(data = data)
 
 @api_router.get("/get_user")
-def user_info(id: int = Query(example = 1)):
+def get_user(id: int = Query(example = 1)) -> UserData:
     
-    try:    
-        user = get_user(id = id)
-        return user
-    except:
-        raise HTTPException(status_code = 400, detail = "Invalid fields")
+    return service.get_user(id = id)
+
+
+@api_router.get("/get_all_users")
+def get_all_users() -> list:
+    
+    return service.get_all_users()

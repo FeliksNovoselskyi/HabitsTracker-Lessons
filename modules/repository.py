@@ -20,13 +20,25 @@ def get_user(id: int):
     with sessionmaker.begin() as session:
         try:
             selected = session.query(User).where(User.id == id)
-            user = selected.scalar()
-            user = User(
-                first_name = user.first_name,
-                last_name = user.last_name,
-                email = user.email
-            )
-            return user     
+            user: User = selected.scalar()
+            
+            return {
+                "first_name": user.first_name,
+                "last_name": user.last_name,
+                "email": user.email
+            }
+        
+        except:
+            raise HTTPException()
+
+def get_all_users():
+    with sessionmaker.begin() as session:
+        try:
+            users_list = session.query(
+                User.id, User.first_name, User.last_name, User.email
+            ).all()
+            
+            return users_list   
         except:
             raise HTTPException()
         
