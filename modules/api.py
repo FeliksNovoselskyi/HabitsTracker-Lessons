@@ -18,6 +18,7 @@ def add_user(data: dict = Body(
     
     return service.add_user(data = data)
 
+
 @api_router.get("/get_user")
 def get_user(id: int = Query(example = 1)) -> UserData:
     
