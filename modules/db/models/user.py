@@ -8,4 +8,5 @@ class User(base_model):
     id = Column(Integer, primary_key = True)
     first_name = Column(String)
     last_name = Column(String)
-    email = Column(String)
+    email = Column(String, unique = True, nullable = False)
+    password = Column(String, nullable = False)

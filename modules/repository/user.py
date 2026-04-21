@@ -1,5 +1,5 @@
 from fastapi import HTTPException
-from .db import sessionmaker, User
+from modules.db import sessionmaker, User
 
 def add_user(data: dict):
     
@@ -41,4 +41,3 @@ def get_all_users():
             return users_list   
         except:
             raise HTTPException()
-        
