@@ -18,3 +18,21 @@ def sign_up(user_data: UserData):
             
         except IntegrityError:
             raise 
+
+
+def get_user(email: str):
+    with sessionmaker.begin() as session:
+        try:
+            selected = session.query(User).where(User.email == email)
+            user: User = selected.scalar()
+            
+            return {
+                'id': user.id,
+                "first_name": user.first_name,
+                "last_name": user.last_name,
+                "email": user.email,
+                "password": user.password
+            }
+        
+        except:
+            print("not found")
