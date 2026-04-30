@@ -1,4 +1,8 @@
+from sqlalchemy.exc import IntegrityError
 from fastapi import APIRouter, HTTPException, Body, Query
+
+import pydantic
+
 from modules.service import account as account_service
 from modules.schemas import UserData
 from modules.exceptions import UserNotFound, InvalidVerification
@@ -16,7 +20,20 @@ def sign_up(data: dict = Body(
         )
     ) -> dict[str, str]:
     
-    return account_service.sign_up(data = data)
+    try:
+        return account_service.sign_up(data = data)
+    
+    except pydantic.ValidationError as error:
+        raise HTTPException(
+            status_code = 422,
+            detail = error.errors()
+        )
+    
+    except IntegrityError:
+        raise HTTPException(
+            status_code = 409,
+            detail = "Error during query user"
+        )
 
 @account_api_router.post("/login")
 def login(data: dict = Body(
@@ -29,6 +46,12 @@ def login(data: dict = Body(
     
     try:
         return account_service.login(data = data)
+    
+    except pydantic.ValidationError as error:
+        raise HTTPException(
+            status_code = 422,
+            detail = error.errors()
+        )
     
     except UserNotFound as error:
         raise HTTPException(

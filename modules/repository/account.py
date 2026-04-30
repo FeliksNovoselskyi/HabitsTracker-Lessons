@@ -1,9 +1,8 @@
-from fastapi import HTTPException
 from sqlalchemy.exc import IntegrityError
 
 from modules.db import sessionmaker, User
 from modules.schemas import UserData
-from modules.exceptions import UserNotFound, InvalidVerification
+from modules.exceptions import UserNotFound
 
 def sign_up(user_data: UserData):
     with sessionmaker.begin() as session:
@@ -17,29 +16,22 @@ def sign_up(user_data: UserData):
             session.add(user)
             session.commit()
             
-        except InvalidVerification as error:
-            raise HTTPException(
-                status_code = error.CODE,
-                detail = error.DETAIL,
-            )
+        except IntegrityError:
+            raise 
 
 
 def get_user(email: str):
     with sessionmaker.begin() as session:
-        try:
-            selected = session.query(User).where(User.email == email)
-            user: User = selected.scalar()
-            
-            return {
-                'id': user.id,
-                "first_name": user.first_name,
-                "last_name": user.last_name,
-                "email": user.email,
-                "password": user.password
-            }
+        selected = session.query(User).where(User.email == email)
+        user: User = selected.scalar()
         
-        except UserNotFound as error:
-            raise HTTPException(
-                status_code = error.CODE,
-                detail = error.DETAIL,
-            )
+        if not user:
+            raise UserNotFound(code = 404, detail = "User not found")
+        
+        return {
+            'id': user.id,
+            "first_name": user.first_name,
+            "last_name": user.last_name,
+            "email": user.email,
+            "password": user.password
+        }
