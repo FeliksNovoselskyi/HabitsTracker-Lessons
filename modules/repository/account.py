@@ -3,6 +3,7 @@ from sqlalchemy.exc import IntegrityError
 
 from modules.db import sessionmaker, User
 from modules.schemas import UserData
+from modules.exceptions import UserNotFound, InvalidVerification
 
 def sign_up(user_data: UserData):
     with sessionmaker.begin() as session:
@@ -16,8 +17,11 @@ def sign_up(user_data: UserData):
             session.add(user)
             session.commit()
             
-        except IntegrityError:
-            raise 
+        except InvalidVerification as error:
+            raise HTTPException(
+                status_code = error.CODE,
+                detail = error.DETAIL,
+            )
 
 
 def get_user(email: str):
@@ -34,5 +38,8 @@ def get_user(email: str):
                 "password": user.password
             }
         
-        except:
-            print("not found")
+        except UserNotFound as error:
+            raise HTTPException(
+                status_code = error.CODE,
+                detail = error.DETAIL,
+            )
