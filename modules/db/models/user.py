@@ -6,7 +6,7 @@ class User(base_model):
     __tablename__ = "users"
     
     id = Column(Integer, primary_key = True)
-    first_name = Column(String)
-    last_name = Column(String)
+    first_name = Column(String, )
+    last_name = Column(String, )
     email = Column(String, unique = True, nullable = False)
-    password = Column(String, nullable = False)
+    password_hash = Column(String, nullable = False)

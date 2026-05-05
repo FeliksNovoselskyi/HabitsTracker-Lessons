@@ -13,13 +13,13 @@ def sign_up(data: dict):
     if not data:
         raise HTTPException(status_code = 400, detail="Empty request body")
     
-    password = password_hasher.hash(data["password"])
+    password_hash = password_hasher.hash(data["password"])
     
     user_data = UserData(
         first_name = data["first_name"],
         last_name = data["last_name"],
         email = data["email"],
-        password = password
+        password_hash = password_hash
     )
     
     account_repository.sign_up(user_data = user_data)
@@ -36,7 +36,7 @@ def login(data: dict):
     # Проверку типов данных
     user_login_data = UserLoginData(
         email = data["email"],
-        password = data["password"]
+        password_hash = data["password"]
     )
     
     # Проверка получения пользователя
@@ -49,7 +49,7 @@ def login(data: dict):
         )
     
     # Проверка хеша введенного пароля с пользовательским
-    password_verify = password_hasher.verify(password = user_login_data.password, hash = user['password'])
+    password_verify = password_hasher.verify(password = user_login_data.password, hash = user['password_hash'])
     
     if not password_verify:
         raise InvalidVerification(

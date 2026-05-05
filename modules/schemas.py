@@ -4,7 +4,7 @@ class UserData(pydantic.BaseModel):
     first_name: str
     last_name: str
     email: str
-    password: str
+    password_hash: str
 
 class UserLoginData(pydantic.BaseModel):
     email: str

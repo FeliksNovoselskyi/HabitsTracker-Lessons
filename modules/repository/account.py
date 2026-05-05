@@ -11,7 +11,7 @@ def sign_up(user_data: UserData):
                 first_name = user_data.first_name,
                 last_name = user_data.last_name,
                 email = user_data.email,
-                password = user_data.password
+                password_hash = user_data.password_hash
             )
             session.add(user)
             session.commit()
@@ -33,5 +33,5 @@ def get_user(email: str):
             "first_name": user.first_name,
             "last_name": user.last_name,
             "email": user.email,
-            "password": user.password
+            "password_hash": user.password_hash
         }

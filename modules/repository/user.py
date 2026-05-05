@@ -30,14 +30,3 @@ def get_user(id: int):
         
         except:
             raise HTTPException()
-
-def get_all_users():
-    with sessionmaker.begin() as session:
-        try:
-            users_list = session.query(
-                User.id, User.first_name, User.last_name, User.email
-            ).all()
-            
-            return users_list   
-        except:
-            raise HTTPException()

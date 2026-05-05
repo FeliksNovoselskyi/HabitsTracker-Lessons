@@ -19,19 +19,6 @@ def add_user(data: dict = Body(
     # return user_service.add_user(data = data)
 
 
-@user_api_router.get(
-    "/get_user", 
-    dependencies = [
-        Depends(CheckUser())
-    ]
-)
-
+@user_api_router.get("/get_user", dependencies = [Depends(CheckUser())])
 def get_user(id: int = Query(example = 1)) -> UserData:
     return user_service.get_user(id = id)
-
-
-@user_api_router.get("/get_all_users")
-def get_all_users() -> list:
-    
-    pass
-    # return user_service.get_all_users()

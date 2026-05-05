@@ -20,25 +20,6 @@ def get_user(id: int):
     except:
         raise HTTPException(status_code = 400, detail = "Invalid fields")
 
-def get_all_users():
-
-    users_list = user_repository.get_all_users()
-    
-    filtered_users_list = []
-    try:
-        for user in users_list:
-            user_data = UserData(
-                first_name = user.first_name,
-                last_name = user.last_name,
-                email = user.email
-            )
-            filtered_users_list.append(user_data)
-        
-        return filtered_users_list
-    
-    except:
-        raise HTTPException(status_code = 400, detail = "Invalid fields")
-
 def add_user(data: dict):
     try:    
         user_data = UserData(
