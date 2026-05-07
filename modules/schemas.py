@@ -9,3 +9,6 @@ class UserData(pydantic.BaseModel):
 class UserLoginData(pydantic.BaseModel):
     email: str
     password: str
+
+class HabitData(pydantic.BaseModel):
+    title: str
